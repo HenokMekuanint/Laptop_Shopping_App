@@ -5,17 +5,17 @@ import { Link } from "react-router-dom";
 import Message from "./../components/LoadingError/Error";
 import axios from "axios";
 const SingleProduct = ({ match }) => {
-  const [product,setProduct]=useState([]);
+  const [product,setProduct]=useState({});
 
   useEffect(()=>{
     const fetchproducts=async()=>{
-      const {data}= await axios.get("/api/products")
+      const {data}= await axios.get(`/api/products/${match.params.id}`);
       setProduct(data);
     };
     fetchproducts();
   }
 
- ,[] );
+ ,[match] );
   return (
     <>
       <Header />
