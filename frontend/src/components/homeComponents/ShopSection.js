@@ -1,13 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import { Link } from "react-router-dom";
 import Rating from "./Rating";
 import Pagination from "./pagination";
+import {useDispatch,useSelector} from "react-redux";
 import { listProduct } from "../../Redux/Actions/ProductActions";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
-import {useDispatch,useSelector} from "react-redux";
-import axios from "axios";
-
 const ShopSection = () => {
   const dispatch=useDispatch();
 
@@ -25,15 +23,9 @@ const ShopSection = () => {
             <div className="col-lg-12 col-md-12 article">
               <div className="shopcontainer row">
                 {
-                  loading ? (
-                    <div className="mb-5">
-                        <Loading/>
-                      </div>
-                  
-                  
-                  ) : error ? (
-                  <Message variant="alert-danger">{error}</Message>
-                  )
+                  loading ? (<Loading/>
+                  ) : error?(
+                  <Message variant="alert-danger">{error}</Message>)
                   :
                   (
                     <>
@@ -70,9 +62,8 @@ const ShopSection = () => {
 
                 }
                 
-                <Pagination>
-
-                </Pagination>
+                {/* Pagination */}
+                <Pagination />
               </div>
             </div>
           </div>

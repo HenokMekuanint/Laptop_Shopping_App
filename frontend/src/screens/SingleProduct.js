@@ -3,40 +3,24 @@ import Header from "./../components/Header";
 import Rating from "../components/homeComponents/Rating";
 import { Link } from "react-router-dom";
 import Message from "./../components/LoadingError/Error";
-import {useDispatch,useSelector} from "react-redux";
-import { listProductDetails } from "../Redux/Actions/ProductActions";
 import axios from "axios";
-import Loading from "../components/LoadingError/Loading";
 const SingleProduct = ({ match }) => {
-  const dispatch=useDispatch();
-  const productId = match.params.id;
-
-  const productDetails=useSelector((state) => state.productDetails)
-  const {loading,error,product}=productDetails
-
+  const [product,setProduct]=useState({});
 
   useEffect(()=>{
-dispatch(listProductDetails(productId))
+    const fetchproducts=async()=>{
+      const {data}= await axios.get(`/api/products/${match.params.id}`);
+      setProduct(data);
+    };
+    fetchproducts();
   }
 
- ,[dispatch,productId] );
+ ,[match] );
   return (
     <>
       <Header />
       <div className="container single-product">
-        {
-          loading ?(
-            <Loading/>
-          )
-          : error ? (
-            <Message variant="alert-danger">
-              {error}
-            </Message>
-          )
-          :
-          (
-            <>
-                    <div className="row">
+        <div className="row">
           <div className="col-md-6">
             <div className="single-image">
               <img src={product.image} alt={product.name} />
@@ -146,11 +130,6 @@ dispatch(listProductDetails(productId))
             </div>
           </div>
         </div>
-            </>
-          )
-        }
-
-
       </div>
     </>
   );
