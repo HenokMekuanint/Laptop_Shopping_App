@@ -3,19 +3,21 @@ import Header from "./../components/Header";
 import Rating from "../components/homeComponents/Rating";
 import { Link } from "react-router-dom";
 import Message from "./../components/LoadingError/Error";
+import {useDispatch,useSelector} from "react-redux";
+
 import axios from "axios";
+import { listProductDetail } from "../Redux/Actions/ProductActions";
 const SingleProduct = ({ match }) => {
   const [product,setProduct]=useState({});
+  const productId=match.params.id;
+  const dispatch=useDispatch();
+
 
   useEffect(()=>{
-    const fetchproducts=async()=>{
-      const {data}= await axios.get(`/api/products/${match.params.id}`);
-      setProduct(data);
-    };
-    fetchproducts();
+dispatch(listProductDetail(productId))
   }
 
- ,[match] );
+ ,[dispatch,productId] );
   return (
     <>
       <Header />
