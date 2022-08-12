@@ -23,7 +23,12 @@ const ShopSection = () => {
             <div className="col-lg-12 col-md-12 article">
               <div className="shopcontainer row">
                 {
-                  loading ? (<Loading/>
+                  loading ? 
+
+                  (
+                    <div  className="mb-5">
+                      <Loading/>
+                    </div>
                   ) : error?(
                   <Message variant="alert-danger">{error}</Message>)
                   :
