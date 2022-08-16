@@ -1,13 +1,13 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect,useState} from "react";
 import Header from "./../components/Header";
 import Rating from "../components/homeComponents/Rating";
 import { Link } from "react-router-dom";
 import Message from "./../components/LoadingError/Error";
 import {useDispatch,useSelector} from "react-redux";
-
-import axios from "axios";
+import Loading from "../components/LoadingError/Loading";
 import { listProductDetails } from "../Redux/Actions/ProductActions";
-const SingleProduct = ({ match }) => {
+const SingleProduct = ({ history , match }) => {
+  const [qty, setQty] = useState(1);
 const productId=match.params.id;
 const dispatch=useDispatch();
 const productDetails=useSelector((state)=>state.productDetails);
@@ -16,11 +16,30 @@ const {loading,error,product}=productDetails;
   useEffect(()=>{
     dispatch(listProductDetails(productId))
   },[dispatch,productId]);
+
+
+  const AddToCartHandle = (e) => {
+    e.preventDefault();
+    history.push(`/cart/${productId}?qty=${qty}`);
+  }
+  // console.log("fsfsdf",product.rating)
   return (
     <>
       <Header />
       <div className="container single-product">
-        <div className="row">
+        {
+          loading ? (
+            <Loading/>
+          )
+          : error ? (
+            <Message variant="alert-danger">
+              {error}
+            </Message>
+          )
+          :
+          (
+            <>
+                    <div className="row">
           <div className="col-md-6">
             <div className="single-image">
               <img src={product.image} alt={product.name} />
@@ -50,12 +69,12 @@ const {loading,error,product}=productDetails;
                   <h6>Reviews</h6>
                   <Rating
                     value={product.rating}
-                    text={`${product.numReviews} reviews`}
+                    text={`${product.rating} reviews`}
                   />
                 </div>
                 {product.countInStock > 0 ? (
                   <>
-                    <div className="flex-box d-flex justify-content-between align-items-center">
+                    <div className="flex-box d-flex justify-content-between align-items-center"> 
                       <h6>Quantity</h6>
                       <select>
                         {[...Array(product.countInStock).keys()].map((x) => (
@@ -65,7 +84,7 @@ const {loading,error,product}=productDetails;
                         ))}
                       </select>
                     </div>
-                    <button className="round-black-btn">Add To Cart</button>
+                    <button onClick={AddToCartHandle} className="round-black-btn">Add To Cart</button>
                   </>
                 ) : null}
               </div>
@@ -130,6 +149,12 @@ const {loading,error,product}=productDetails;
             </div>
           </div>
         </div>
+            </>
+          )
+        }
+         
+
+
       </div>
     </>
   );
