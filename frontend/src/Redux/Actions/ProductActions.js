@@ -17,15 +17,18 @@ export const listProduct = ()=> async (dispatch)=>{
     }
 }
 
-export const listProductDetail = (id)=> async (dispatch)=>{
+export const listProductDetails = (id)=> async (dispatch)=>{
     try{
         dispatch({type:PRODUCTION_DETAIL_REQUEST})
-        const {data}=await axios.get(`api/products/${id}`);
+        const {data}=await axios.get(`/api/products/${id}`);
+
         dispatch({type:PRODUCTION_DETAIL_SUCCESS,payload:data})
     }catch(error){
         dispatch({
             type:PRODUCTION_DETAIL_FAIL,
-            payload:error.response && error.response.data.message 
+            payload:
+            
+            error.response && error.response.data.message 
             ? error.response.data.message
             :error.message,
         })
