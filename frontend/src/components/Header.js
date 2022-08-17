@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
+import { useSelector } from "react-redux";
 const Header = () => {
+  const cart = useSelector((state) => state.cart);
+  const { cartItems} =cart;
   return (
     <div>
       {/* Top Header */}
@@ -67,7 +69,7 @@ const Header = () => {
                   </div>
                   <Link to="/cart" className="cart-mobile-icon">
                     <i className="fas fa-shopping-bag"></i>
-                    <span className="badge">4</span>
+                    <span className="badge">{cartItems.length}</span>
                   </Link>
                 </div>
                 <div className="col-12 d-flex align-items-center">
@@ -130,7 +132,7 @@ const Header = () => {
 
                 <Link to="/cart">
                   <i className="fas fa-shopping-bag"></i>
-                  <span className="badge">4</span>
+                  <span className="badge">{cartItems.length}</span>
                 </Link>
               </div>
             </div>
