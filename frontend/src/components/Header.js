@@ -1,9 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../Redux/Actions/userActions";
 const Header = () => {
+  const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
   const { cartItems} =cart;
+  const userLogin = useSelector((state) => state. userLogin);
+  const {userInfo}=userLogin
+  const logoutHandler = () => {
+    dispatch(logout())
+  };
   return (
     <div>
       {/* Top Header */}
@@ -47,7 +54,9 @@ const Header = () => {
                   </Link>
                 </div>
                 <div className="col-6 d-flex align-items-center justify-content-end Login-Register">
-                  <div className="btn-group">
+                  {
+                    userInfo ? (
+                                        <div className="btn-group">
                     <button
                       type="button"
                       className="name-button dropdown-toggle"
@@ -62,11 +71,37 @@ const Header = () => {
                         Profile
                       </Link>
 
-                      <Link className="dropdown-item" to="#">
+                      <Link className="dropdown-item" to="#" onClick={logoutHandler}>
                         Logout
                       </Link>
                     </div>
                   </div>
+                    )
+                    :
+                    (
+                      <div className="btn-group">
+                      <button
+                        type="button"
+                        className="name-button dropdown-toggle"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        <i class="fas fa-user"></i>
+                      </button>
+                      <div className="dropdown-menu">
+                        <Link className="dropdown-item" to="/login">
+                          Login
+                        </Link>
+  
+                        <Link className="dropdown-item" to="/register">
+                          Register
+                        </Link>
+                      </div>
+                    </div>
+                    )
+                  }
+
                   <Link to="/cart" className="cart-mobile-icon">
                     <i className="fas fa-shopping-bag"></i>
                     <span className="badge">{cartItems.length}</span>
@@ -109,7 +144,9 @@ const Header = () => {
                 </form>
               </div>
               <div className="col-md-3 d-flex align-items-center justify-content-end Login-Register">
-                <div className="btn-group">
+                {
+                  userInfo ? (
+                                    <div className="btn-group">
                   <button
                     type="button"
                     className="name-button dropdown-toggle"
@@ -117,18 +154,37 @@ const Header = () => {
                     aria-haspopup="true"
                     aria-expanded="false"
                   >
-                    Hi, Henok
+                    Hi, {userInfo.name}
                   </button>
                   <div className="dropdown-menu">
                     <Link className="dropdown-item" to="/profile">
                       Profile
                     </Link>
 
-                    <Link className="dropdown-item" to="#">
+                    <Link className="dropdown-item" to="#"
+                    onClick={logoutHandler}
+                    >
                       Logout
                     </Link>
                   </div>
                 </div>
+                  )
+                  :
+                  (
+                    <>
+                    <Link to="/register">
+                      Register
+                    </Link>
+
+                    <Link to="/login">
+                      Login
+                    </Link>
+
+                    </>
+                  )
+                }
+                
+
 
                 <Link to="/cart">
                   <i className="fas fa-shopping-bag"></i>

@@ -1,4 +1,5 @@
 import { USER_LOGIN_REQUEST,USER_LOGIN_SUCCESS,USER_LOGIN_FAIL,USER_LOGOUT } from "../Constants/UserConstants";
+import axios from "axios";
 export const login = (email,password)=> async (dispatch)=>{
     try{
         dispatch({type:USER_LOGIN_REQUEST});
@@ -10,7 +11,7 @@ export const login = (email,password)=> async (dispatch)=>{
         const {data}=await axios.post(`/api/users/login`,{email,password},config);
 
         dispatch({type:USER_LOGIN_SUCCESS,payload:data});
-        localStorage.getItem("userInfo",JSON.stringify(data));
+        localStorage.setItem("userInfo",JSON.stringify(data));
     }catch(error){
         dispatch({
             type:USER_LOGIN_FAIL,
@@ -21,4 +22,11 @@ export const login = (email,password)=> async (dispatch)=>{
             :error.message,
         })
     }
+}
+
+//LOGOUT
+export const logout = () => async (dispatch)=>{
+    localStorage.removeItem("userInfo");
+    dispatch({type:USER_LOGOUT});
+    document.location.href="/login";
 }
