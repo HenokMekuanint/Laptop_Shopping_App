@@ -35,7 +35,8 @@ if (userInfo) {
         <form className="Login col-md-8 col-lg-4 col-11" onSubmit={submitHandler}>
           <input type="email" placeholder="Email"
           value={email} 
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)
+          }
           />
           <input type="password" placeholder="Password" 
                     value={password} 
