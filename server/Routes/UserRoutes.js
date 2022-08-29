@@ -82,7 +82,7 @@ userRoute.get(
 );
 
 //UPDATEPROFILE
-userRoute.get(
+userRoute.put(
     "/profile",
     protect,
     asyncHandler(async (req,res) => {
