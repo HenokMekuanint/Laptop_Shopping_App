@@ -1,6 +1,6 @@
 import axios from "axios";
 import { CART_CLEAR_ITEM } from "../Constants/CartConstants";
-import { ORDER_CREATE_REQUEST,ORDER_CREATE_SUCCESS,ORDER_CREATE_FAIL,ORDER_CREATE_RESET,ORDER_DETAILS_SUCCESS,ORDER_DETAILS_REQUEST,ORDER_DETAILS_FAIL } from "../Constants/OrderConstants";
+import { ORDER_CREATE_REQUEST,ORDER_CREATE_SUCCESS,ORDER_CREATE_FAIL,ORDER_CREATE_RESET,ORDER_DETAILS_SUCCESS,ORDER_DETAILS_REQUEST,ORDER_DETAILS_FAIL, ORDER_PAY_REQUEST, ORDER_PAY_SUCCESS, ORDER_PAY_FAIL } from "../Constants/OrderConstants";
 import {logout} from "./userActions"
 
 
@@ -74,6 +74,42 @@ export const getOrderDetails = (id)=> async (dispatch,getState)=>{
         }
         dispatch({
             type:ORDER_DETAILS_FAIL,
+            payload:message
+        })
+
+
+    }
+}
+
+
+//CREATE PAY
+export const payOrder = (orderId,paymentResult)=> async (dispatch,getState)=>{
+    try{
+        dispatch({type:ORDER_PAY_REQUEST});
+
+        const {
+            userLogin:{userInfo},
+        }= getState();
+        
+        const config = {
+            headers:{
+                "Content-Type":"application/json",
+                Authorization:`Bearer ${userInfo.token}`
+            },
+        };
+        const {data}=await axios.put(`/api/orders/${orderId}/pay`,paymentResult,config);
+
+        dispatch({type:ORDER_PAY_SUCCESS,payload:data});
+    }catch(error){
+        const message = 
+        error.response && error.response.data.message 
+        ? error.response.data.message
+        :error.message;
+        if (message === "Not authorized, token failed") {
+            dispatch(logout())
+        }
+        dispatch({
+            type:ORDER_PAY_FAIL,
             payload:message
         })
 
