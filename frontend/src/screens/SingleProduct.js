@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 import Message from "./../components/LoadingError/Error";
 import {useDispatch,useSelector} from "react-redux";
 import Loading from "../components/LoadingError/Loading";
-import { listProductDetails } from "../Redux/Actions/ProductActions";
+import {createProductReview, listProductDetails } from "../Redux/Actions/ProductActions";
 import { PRODUCTION_CREATE_REVIEW_RESET } from "../Redux/Constants/ProductConstants";
 import moment from "moment";
-import Loading from "../components/LoadingError/Loading";
+
 const SingleProduct = ({ history , match }) => {
 const [qty, setQty] = useState(1);
 const [rating, setRating] = useState(1);
@@ -49,6 +49,14 @@ const {
     history.push(`/cart/${productId}?qty=${qty}`);
   }
   // console.log("fsfsdf",product.rating)
+const submitHandler=(e)=>{
+e.preventDefault();
+dispatch(createProductReview(productId,{
+  rating,
+  comment
+}))
+}
+
   return (
     <>
       <Header />
@@ -146,15 +154,19 @@ const {
           </div>
           <div className="col-md-6">
             <h6>WRITE A CUSTOMER REVIEW</h6>
-            <div className="my-4"></div>
+            <div className="my-4">
               {loadingCreateReview && <Loading/>}
               {errorCreateReview && (
-                
+                <Message variant="alert-danger">{errorCreateReview}</Message>
               )}
-            <form>
+              </div>
+
+              {
+                userInfo ? (
+                             <form onSubmit={submitHandler}>
               <div className="my-4">
                 <strong>Rating</strong>
-                <select className="col-12 bg-light p-3 mt-2 border-0 rounded">
+                <select value={rating} onChange={(e)=>setRating(e.target.value)} className="col-12 bg-light p-3 mt-2 border-0 rounded">
                   <option value="">Select...</option>
                   <option value="1">1 - Poor</option>
                   <option value="2">2 - Fair</option>
@@ -167,16 +179,20 @@ const {
                 <strong>Comment</strong>
                 <textarea
                   row="3"
+                  value={comment}
+                  onChange={(e)=>setComment(e.target.value)}
                   className="col-12 bg-light p-3 mt-2 border-0 rounded"
                 ></textarea>
               </div>
               <div className="my-3">
-                <button className="col-12 bg-black border-0 p-3 rounded text-white">
+                <button disabled={loadingCreateReview} className="col-12 bg-black border-0 p-3 rounded text-white">
                   SUBMIT
                 </button>
               </div>
-            </form>
-            <div className="my-3">
+            </form> 
+                )
+                :
+                           <div className="my-3">
               <Message variant={"alert-warning"}>
                 Please{" "}
                 <Link to="/login">
@@ -184,7 +200,8 @@ const {
                 </Link>{" "}
                 to write a review{" "}
               </Message>
-            </div>
+            </div> 
+              }
           </div>
         </div>
             </>
