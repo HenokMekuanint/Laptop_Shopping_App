@@ -1,9 +1,13 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React  from "react";
+import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../Redux/Actions/userActions";
+import { useState } from "react";
 const Header = () => {
+  const [keyword,setkeyword]=useState();
   const dispatch = useDispatch();
+  let history=useHistory();
+
   const cart = useSelector((state) => state.cart);
   const { cartItems} =cart;
   const userLogin = useSelector((state) => state. userLogin);
@@ -11,6 +15,14 @@ const Header = () => {
   const logoutHandler = () => {
     dispatch(logout())
   };
+  const submitHandler=(e)=>{
+    e.preventDefault();
+    if (keyword.trim()) {
+      history.push(`/search/${keyword}`);
+    } else {
+      history.push("/");
+    }
+  }
   return (
     <div>
       {/* Top Header */}
@@ -108,11 +120,12 @@ const Header = () => {
                   </Link>
                 </div>
                 <div className="col-12 d-flex align-items-center">
-                  <form className="input-group">
+                  <form onSubmit={ submitHandler } className="input-group">
                     <input
                       type="search"
                       className="form-control rounded search"
                       placeholder="Search"
+                      onChange={(e) => setkeyword(e.target.value)}
                     />
                     <button type="submit" className="search-button">
                       search
@@ -132,11 +145,12 @@ const Header = () => {
                 </Link>
               </div>
               <div className="col-md-6 col-8 d-flex align-items-center">
-                <form className="input-group">
+                <form onSubmit={submitHandler} className="input-group">
                   <input
                     type="search"
                     className="form-control rounded search"
                     placeholder="Search"
+                    onChange={(e) => setkeyword(e.target.value)}
                   />
                   <button type="submit" className="search-button">
                     search

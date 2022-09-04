@@ -4,10 +4,12 @@ import {PRODUCTION_LIST_REQUEST, PRODUCTION_LIST_SUCCESS, PRODUCTION_LIST_FAIL, 
 import {PRODUCTION_DETAIL_REQUEST, PRODUCTION_DETAIL_SUCCESS, PRODUCTION_DETAIL_FAIL} from "../Constants/ProductConstants"
 import { logout } from "./userActions";
 //LIST ALL PRODUCT 
-export const listProduct = ()=> async (dispatch)=>{
+export const listProduct = (keyword=" ")=> 
+    
+    async (dispatch)=>{
     try{
         dispatch({type:PRODUCTION_LIST_REQUEST})
-        const {data}=await axios.get("api/products");
+        const {data}=await axios.get(`/api/products?keyword=${keyword}`);
         dispatch({type:PRODUCTION_LIST_SUCCESS,payload:data})
     }catch(error){
         dispatch({
