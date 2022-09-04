@@ -6,16 +6,42 @@ import Message from "./../components/LoadingError/Error";
 import {useDispatch,useSelector} from "react-redux";
 import Loading from "../components/LoadingError/Loading";
 import { listProductDetails } from "../Redux/Actions/ProductActions";
+import { PRODUCTION_CREATE_REVIEW_RESET } from "../Redux/Constants/ProductConstants";
+import moment from "moment";
+import Loading from "../components/LoadingError/Loading";
 const SingleProduct = ({ history , match }) => {
-  const [qty, setQty] = useState(1);
+const [qty, setQty] = useState(1);
+const [rating, setRating] = useState(1);
+const [comment, setComment] = useState("");
+
 const productId=match.params.id;
 const dispatch=useDispatch();
+
 const productDetails=useSelector((state)=>state.productDetails);
 const {loading,error,product}=productDetails;
 
+const userLogin=useSelector((state)=>state.userLogin);
+const { userInfo }=userLogin;
+
+
+const productReviewCreate=useSelector((state)=>state.productReviewCreate);
+const { 
+
+  loading : loadingCreateReview, 
+  error : errorCreateReview,
+  success: successCreateReview
+
+}=productReviewCreate;
+
   useEffect(()=>{
+    if (successCreateReview) {
+      alert("Review Submitted");
+      setRating(0);
+      setComment("");
+      dispatch({type:PRODUCTION_CREATE_REVIEW_RESET})
+    }
     dispatch(listProductDetails(productId))
-  },[dispatch,productId]);
+  },[dispatch,productId,successCreateReview]);
 
 
   const AddToCartHandle = (e) => {
@@ -98,23 +124,33 @@ const {loading,error,product}=productDetails;
         <div className="row my-5">
           <div className="col-md-6">
             <h6 className="mb-3">REVIEWS</h6>
-            <Message variant={"alert-info mt-3"}>No Reviews</Message>
-            <div className="mb-5 mb-md-3 bg-light p-3 shadow-sm rounded">
-              <strong>Admin Doe</strong>
-              <Rating />
-              <span>Jan 12 2021</span>
+            {
+              product.reviews === 0 && (
+                <Message variant={"alert-info mt-3"}>No Reviews</Message>
+              )}
+            {
+              product.reviews.map((review)=>(
+              <div key={review._id} className="mb-5 mb-md-3 bg-light p-3 shadow-sm rounded">
+              <strong>{review.name}</strong>
+              <Rating value={review.rating}/>
+              <span>{moment(review.createdAt).calendar()}</span>
               <div className="alert alert-info mt-3">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book
+                {
+                  review.comment
+                }
               </div>
             </div>
+              ))
+            }
+
           </div>
           <div className="col-md-6">
             <h6>WRITE A CUSTOMER REVIEW</h6>
             <div className="my-4"></div>
-
+              {loadingCreateReview && <Loading/>}
+              {errorCreateReview && (
+                
+              )}
             <form>
               <div className="my-4">
                 <strong>Rating</strong>
